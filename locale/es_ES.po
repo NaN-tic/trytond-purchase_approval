@@ -1,0 +1,95 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:approval.request:"
+msgid ""
+"You cannot approve the request \"%(request)s\" because the related purchase "
+"\"%(purchase)s\" is not a Quotation."
+msgstr ""
+"No puedes aprobar la petición \"%(request)s\" porque la compra relacionada "
+"\"%(purchase)s\" no es un presupuesto."
+
+msgctxt "error:approval.request:"
+msgid ""
+"You cannot cancel the request \"%(request)s\" because the related purchase "
+"\"%(purchase)s\" is not a Quotation or a Draft purchase."
+msgstr ""
+"No puedes cancelar la petición \"%(request)s\" porque la compra relacionada "
+"\"%(purchase)s\" no es un presupuesto ni está en estado borrador."
+
+msgctxt "error:approval.request:"
+msgid ""
+"You cannot reject the request \"%(request)s\" because the related purchase "
+"\"%(purchase)s\" is not a Quotation."
+msgstr ""
+"No puedes rechazar la petición \"%(request)s\" porque la compra relacionada "
+"\"%(purchase)s\" no es un presupuesto."
+
+msgctxt "error:purchase.purchase:"
+msgid ""
+"The purchase \"%s\" cannot be confirmed because it doesn't have any accepted"
+" Approval Request."
+msgstr ""
+"La compra \"%s\" no se puede confirmar porque no tiene ninguna petición de "
+"aprobación aceptada."
+
+msgctxt "field:purchase.purchase,approval_group:"
+msgid "Approval Group"
+msgstr "Grupo de aprobación"
+
+msgctxt "field:purchase.purchase,approval_requests:"
+msgid "Approval Requests"
+msgstr "Peticiones de aprobación"
+
+msgctxt "field:purchase.purchase,approval_state:"
+msgid "Approval State"
+msgstr "Estado aprobación"
+
+msgctxt "field:purchase.purchase,blockers:"
+msgid "Blockers"
+msgstr "Bloqueadores"
+
+msgctxt "model:ir.action,name:act_approval_request"
+msgid "Approval Requests"
+msgstr "Peticiones de aprobación"
+
+msgctxt "model:ir.action,name:act_purchase_approval_requests"
+msgid "Approval Requests"
+msgstr "Peticiones de aprobación"
+
+msgctxt "model:ir.action.act_window.domain,name:act_approval_request_all"
+msgid "All"
+msgstr "Todos"
+
+msgctxt "model:ir.action.act_window.domain,name:act_approval_request_approved"
+msgid "Approved"
+msgstr "Aprobada"
+
+msgctxt "model:ir.action.act_window.domain,name:act_approval_request_pending"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "model:ir.action.act_window.domain,name:act_approval_request_rejected"
+msgid "Rejected"
+msgstr "Rechazada"
+
+msgctxt "model:ir.ui.menu,name:menu_purchase_approval_request"
+msgid "Approval Requests"
+msgstr "Peticiones de aprobación"
+
+msgctxt "selection:purchase.purchase,approval_state:"
+msgid "Approved"
+msgstr "Aprobada"
+
+msgctxt "selection:purchase.purchase,approval_state:"
+msgid "None"
+msgstr "Ninguno"
+
+msgctxt "selection:purchase.purchase,approval_state:"
+msgid "Pending"
+msgstr "Pendiente"
+
+msgctxt "selection:purchase.purchase,approval_state:"
+msgid "Rejected"
+msgstr "Rechazada"
