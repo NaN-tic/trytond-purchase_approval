@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<tryton>
+    <data>
+        <!-- purchase.purchase -->
+        <record model="ir.ui.view" id="purchase_view_form">
+            <field name="model">purchase.purchase</field>
+            <field name="inherit" ref="purchase.purchase_view_form"/>
+            <field name="name">purchase_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="purchase_view_list">
+            <field name="model">purchase.purchase</field>
+            <field name="inherit" ref="purchase.purchase_view_tree"/>
+            <field name="name">purchase_list</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_purchase_approval_requests">
+            <field name="name">Approval Requests</field>
+            <field name="res_model">approval.request</field>
+            <field name="domain">[('document', 'in', Eval('active_ids'), 'purchase.purchase')]</field>
+        </record>
+        <record model="ir.action.keyword"
+                id="act_purchase_approval_requests_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="act_purchase_approval_requests"/>
+        </record>
+
+        <!-- approval.request -->
+        <record model="ir.action.act_window" id="act_approval_request">
+            <field name="name">Approval Requests</field>
+            <field name="res_model">approval.request</field>
+            <field name="domain">[('document', 'like', 'purchase.purchase,%')]</field>
+            <field name="context">{'approval_request_model': 'purchase.purchase'}</field>
+            <field name="search_value"></field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_approval_request_view1">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="approval.approval_request_view_list"/>
+            <field name="act_window" ref="act_approval_request"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_approval_request_view2">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="approval.approval_request_view_form"/>
+            <field name="act_window" ref="act_approval_request"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_approval_request_pending">
+            <field name="act_window" ref="act_approval_request"/>
+            <field name="name">Pending</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain">[('state', '=', 'pending')]</field>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_approval_request_approved">
+            <field name="act_window" ref="act_approval_request"/>
+            <field name="name">Approved</field>
+            <field name="sequence" eval="20"/>
+            <field name="domain">[('state', '=', 'approved')]</field>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_approval_request_rejected">
+            <field name="act_window" ref="act_approval_request"/>
+            <field name="name">Rejected</field>
+            <field name="sequence" eval="30"/>
+            <field name="domain">[('state', '=', 'rejected')]</field>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_approval_request_all">
+            <field name="act_window" ref="act_approval_request"/>
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+        </record>
+        <menuitem id="menu_purchase_approval_request"
+            action="act_approval_request"
+            parent="purchase.menu_purchase_form" sequence="10"/>
+    </data>
+</tryton>

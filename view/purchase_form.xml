@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<data>
+    <xpath expr="/form/notebook/page/field[@name='lines']" position="before">
+        <label name="approval_group"/>
+        <field name="approval_group"/>
+    </xpath>
+    <xpath expr="/form/notebook/page[@id='info']" position="after">
+        <page name="approval_requests">
+            <field name="approval_requests" colspan="4"/>
+        </page>
+    </xpath>
+</data>
