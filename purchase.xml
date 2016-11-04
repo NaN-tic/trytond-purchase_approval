@@ -19,7 +19,7 @@
         <record model="ir.action.act_window" id="act_purchase_approval_requests">
             <field name="name">Approval Requests</field>
             <field name="res_model">approval.request</field>
-            <field name="domain">[('document', 'in', Eval('active_ids'), 'purchase.purchase')]</field>
+            <field name="domain">[('document.id', 'in', Eval('active_ids'), 'purchase.purchase')]</field>
         </record>
         <record model="ir.action.keyword"
                 id="act_purchase_approval_requests_keyword1">
