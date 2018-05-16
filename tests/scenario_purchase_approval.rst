@@ -10,44 +10,25 @@ Imports::
     >>> from operator import attrgetter
     >>> from proteus import config, Model, Wizard
     >>> today = datetime.date.today()
+    >>> from trytond.tests.tools import activate_modules
+    >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
+    ...     create_chart, get_accounts, create_tax, create_tax_code
+    >>> from trytond.modules.company.tests.tools import create_company, \
+    ...     get_company
 
-Create database::
+Install product_cost_plan Module::
 
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
+    >>> config = activate_modules('purchase_approval')
 
-Install purchase_approval::
-
-    >>> Module = Model.get('ir.module.module')
-    >>> purchase_module, = Module.find([('name', '=', 'purchase_approval')])
-    >>> Module.install([purchase_module.id], config.context)
-    >>> Wizard('ir.module.module.install_upgrade').execute('upgrade')
 
 Create company::
 
-    >>> Currency = Model.get('currency.currency')
-    >>> CurrencyRate = Model.get('currency.currency.rate')
-    >>> currencies = Currency.find([('code', '=', 'USD')])
-    >>> if not currencies:
-    ...     currency = Currency(name='U.S. Dollar', symbol='$', code='USD',
-    ...         rounding=Decimal('0.01'), mon_grouping='[3, 3, 0]',
-    ...         mon_decimal_point='.', mon_thousands_sep=',')
-    ...     currency.save()
-    ...     CurrencyRate(date=today + relativedelta(month=1, day=1),
-    ...         rate=Decimal('1.0'), currency=currency).save()
-    ... else:
-    ...     currency, = currencies
-    >>> Company = Model.get('company.company')
-    >>> Party = Model.get('party.party')
-    >>> company_config = Wizard('company.company.config')
-    >>> company_config.execute('company')
-    >>> company = company_config.form
-    >>> party = Party(name='Dunder Mifflin')
-    >>> party.save()
-    >>> company.party = party
-    >>> company.currency = currency
-    >>> company_config.execute('add')
-    >>> company, = Company.find([])
+    >>> _ = create_company()
+    >>> company = get_company()
+    >>> tax_identifier = company.party.identifiers.new()
+    >>> tax_identifier.type = 'eu_vat'
+    >>> tax_identifier.code = 'BE0897290877'
+    >>> company.party.save()
 
 Reload the context::
 
@@ -69,30 +50,13 @@ Create purchase user::
 
 Create chart of accounts::
 
-    >>> AccountTemplate = Model.get('account.account.template')
-    >>> Account = Model.get('account.account')
-    >>> Journal = Model.get('account.journal')
-    >>> account_template, = AccountTemplate.find([('parent', '=', None)])
-    >>> create_chart = Wizard('account.create_chart')
-    >>> create_chart.execute('account')
-    >>> create_chart.form.account_template = account_template
-    >>> create_chart.form.company = company
-    >>> create_chart.execute('create_account')
-    >>> receivable, = Account.find([
-    ...         ('kind', '=', 'receivable'),
-    ...         ('company', '=', company.id),
-    ...         ])
-    >>> payable, = Account.find([
-    ...         ('kind', '=', 'payable'),
-    ...         ('company', '=', company.id),
-    ...         ])
-    >>> expense, = Account.find([
-    ...         ('kind', '=', 'expense'),
-    ...         ('company', '=', company.id),
-    ...         ])
-    >>> create_chart.form.account_receivable = receivable
-    >>> create_chart.form.account_payable = payable
-    >>> create_chart.execute('create_properties')
+    >>> _ = create_chart(company)
+    >>> accounts = get_accounts(company)
+    >>> receivable = accounts['receivable']
+    >>> revenue = accounts['revenue']
+    >>> expense = accounts['expense']
+    >>> account_tax = accounts['tax']
+    >>> account_cash = accounts['cash']
 
 Create parties::
 
@@ -103,10 +67,12 @@ Create parties::
 Create payment term::
 
     >>> PaymentTerm = Model.get('account.invoice.payment_term')
-    >>> PaymentTermLine = Model.get('account.invoice.payment_term.line')
-    >>> payment_term = PaymentTerm(name='Direct')
-    >>> payment_term_line = PaymentTermLine(type='remainder', days=0)
-    >>> payment_term.lines.append(payment_term_line)
+    >>> payment_term = PaymentTerm(name='Term')
+    >>> line = payment_term.lines.new(type='percent', ratio=Decimal('.5'))
+    >>> delta, = line.relativedeltas
+    >>> delta.days = 20
+    >>> line = payment_term.lines.new(type='remainder')
+    >>> delta = line.relativedeltas.new(days=40)
     >>> payment_term.save()
 
 Create approval group:
@@ -156,10 +122,10 @@ Quote purchase and check request is created::
 
 Check purchase can not be confirmed::
 
-    >>> purchase.click('confirm')
+    >>> purchase.click('confirm') # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'The purchase "1" cannot be confirmed because it doesn\'t have any accepted Approval Request.', ''))
+    UserError: ...
 
 Move to draft the purchase and check request is cancelled::
 

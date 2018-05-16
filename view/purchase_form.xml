@@ -3,11 +3,11 @@
      copyright notices and license terms. -->
 <data>
     <xpath expr="/form/notebook/page/field[@name='lines']" position="before">
-        <label name="approval_group"/>
+       <label name="approval_group"/>
         <field name="approval_group"/>
     </xpath>
     <xpath expr="/form/notebook/page[@id='info']" position="after">
-        <page name="approval_requests">
+         <page id="approval" string="Approval Request">
             <field name="approval_requests" colspan="4"/>
         </page>
     </xpath>
