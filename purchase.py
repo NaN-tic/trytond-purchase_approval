@@ -51,16 +51,8 @@ class Purchase:
         '''
         Return the approval state for the purchase.
         '''
-        if not self.approval_requests or all(r.state == 'cancelled'
-                for r in self.approval_requests):
-            return 'none'
-        state = 'pending'
-        for request in self.approval_requests:
-            if request.state == 'approved':
-                return 'approved'
-            elif request.state == 'rejected':
-                state = 'rejected'
-        return state
+        requests = self.approval_requests
+        return requests[-1].state if requests and requests[-1].state != 'cancelled' else 'none'
 
     @classmethod
     def set_approval_state(cls, purchases):
