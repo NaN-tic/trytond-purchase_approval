@@ -5,13 +5,14 @@ from datetime import datetime
 from trytond.model import ModelView, Workflow, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['Purchase']
 
 
-class Purchase:
+class Purchase(metaclass=PoolMeta):
     __name__ = 'purchase.purchase'
-    __metaclass__ = PoolMeta
     approval_group = fields.Many2One('approval.group', 'Approval Group',
         domain=[
             ['OR',
@@ -33,15 +34,6 @@ class Purchase:
     blockers = fields.Function(fields.Many2Many('res.user', None, None,
             'Blockers'),
         'get_blockers', searcher='search_blockers')
-
-    @classmethod
-    def __setup__(cls):
-        super(Purchase, cls).__setup__()
-        cls._error_messages.update({
-                'missing_approval': (
-                    'The purchase "%s" cannot be confirmed because it '
-                    'doesn\'t have any accepted Approval Request.'),
-                })
 
     @staticmethod
     def default_approval_state():
@@ -127,7 +119,7 @@ class Purchase:
     def confirm(cls, purchases):
         for purchase in purchases:
             if purchase.approval_state != 'approved':
-                cls.raise_user_error('missing_approval', (purchase.rec_name,))
+                raise UserError(gettext('purchase_approval.missing_approval', purchase=purchase.rec_name))
         super(Purchase, cls).confirm(purchases)
 
     @classmethod

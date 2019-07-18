@@ -5,6 +5,8 @@ from functools import wraps
 from trytond.model import ModelView, Workflow
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['ApprovalRequest']
 
@@ -24,25 +26,12 @@ def set_purchase_approval_state(func):
     return wrapper
 
 
-class ApprovalRequest:
+class ApprovalRequest(metaclass=PoolMeta):
     __name__ = 'approval.request'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
         super(ApprovalRequest, cls).__setup__()
-        cls._error_messages.update({
-                'approve_no_quotation': (
-                    'You cannot approve the request "%(request)s" because the '
-                    'related purchase "%(purchase)s" is not a Quotation.'),
-                'reject_no_quotation': (
-                    'You cannot reject the request "%(request)s" because the '
-                    'related purchase "%(purchase)s" is not a Quotation.'),
-                'cancel_no_quotation_draft_purchase': (
-                    'You cannot cancel the request "%(request)s" because the '
-                    'related purchase "%(purchase)s" is not a Quotation or a '
-                    'Draft purchase.'),
-                })
 
     @classmethod
     def _get_document(cls):
@@ -60,10 +49,10 @@ class ApprovalRequest:
         for request in requests:
             if (isinstance(request.document, Purchase)
                     and request.document.state != 'quotation'):
-                cls.raise_user_error('approve_no_quotation', {
-                        'request': request.rec_name,
-                        'purchase': request.document.rec_name,
-                        })
+                raise UserError(gettext(
+                        'purchase_approval.approve_no_quotation',
+                        request=request.rec_name,
+                        purchase=request.document.rec_name))
         super(ApprovalRequest, cls).approve(requests)
 
     @classmethod
@@ -76,10 +65,10 @@ class ApprovalRequest:
         for request in requests:
             if (isinstance(request.document, Purchase)
                     and request.document.state != 'quotation'):
-                cls.raise_user_error('reject_no_quotation', {
-                        'request': request.rec_name,
-                        'purchase': request.document.rec_name,
-                        })
+                raise
+            UserError(gettext('purchase_approval.reject_no_quotation',
+                    request=request.rec_name,
+                    purchase=request.document.rec_name))
         super(ApprovalRequest, cls).reject(requests)
 
     @classmethod
@@ -92,10 +81,10 @@ class ApprovalRequest:
         for request in requests:
             if (isinstance(request.document, Purchase)
                     and request.document.state not in ('draft', 'quote')):
-                cls.raise_user_error('cancel_no_quotation_draft_purchase', {
-                        'request': request.rec_name,
-                        'purchase': request.document.rec_name,
-                        })
+                raise UserError(gettext(
+                        'purchase_approval.cancel_no_quotation_draft_purchase',
+                        request=request.rec_name,
+                        purchase=request.document.rec_name))
         super(ApprovalRequest, cls).cancel(requests)
 
     @classmethod
