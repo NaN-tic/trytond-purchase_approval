@@ -2,7 +2,7 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <tryton>
-    <data group="1">
+    <data grouped="1">
         <record model="ir.message" id="approve_no_quotation">
             <field name="text">You cannot approve the request "%(request)s" because the
                 related purchase "%(purchase)s" is not a Quotation.</field>
