@@ -92,25 +92,23 @@ Create a purchase::
     >>> purchase.approval_group = approval_group
     >>> purchase.invoice_method = 'manual'
     >>> purchase_line = purchase.lines.new()
-    >>> purchase_line.account = expense
     >>> purchase_line.description = 'Line 1'
     >>> purchase_line.quantity = 1.0
     >>> purchase_line.unit_price = Decimal(60)
     >>> purchase_line = purchase.lines.new()
-    >>> purchase_line.account = expense
     >>> purchase_line.description = 'Line 1'
     >>> purchase_line.quantity = 2.0
     >>> purchase_line.unit_price = Decimal(40)
     >>> purchase.save()
     >>> purchase.state
-    u'draft'
+    'draft'
 
 Check approval state::
 
     >>> purchase.approval_requests
     []
     >>> purchase.approval_state
-    u'none'
+    'none'
 
 Quote purchase and check request is created::
 
@@ -118,7 +116,7 @@ Quote purchase and check request is created::
     >>> len(purchase.approval_requests)
     1
     >>> purchase.approval_state
-    u'pending'
+    'pending'
 
 Check purchase can not be confirmed::
 
@@ -133,21 +131,21 @@ Move to draft the purchase and check request is cancelled::
     >>> len(purchase.approval_requests)
     1
     >>> purchase.approval_requests[0].state
-    u'cancelled'
+    'cancelled'
     >>> purchase.approval_state
-    u'none'
+    'none'
 
 Quote purchase and check a new pending request is created::
 
     >>> purchase.click('quote')
     >>> purchase.state
-    u'quotation'
+    'quotation'
     >>> len(purchase.approval_requests)
     2
     >>> sorted(r.state for r in purchase.approval_requests)
-    [u'cancelled', u'pending']
+    ['cancelled', 'pending']
     >>> purchase.approval_state
-    u'pending'
+    'pending'
 
 Reject the pending request::
 
@@ -156,7 +154,7 @@ Reject the pending request::
     >>> pending_request.click('reject')
     >>> purchase.reload()
     >>> purchase.approval_state
-    u'rejected'
+    'rejected'
 
 Move to draft the purchase and check request is still rejected::
 
@@ -164,9 +162,9 @@ Move to draft the purchase and check request is still rejected::
     >>> len(purchase.approval_requests)
     2
     >>> sorted(r.state for r in purchase.approval_requests)
-    [u'cancelled', u'rejected']
+    ['cancelled', 'rejected']
     >>> purchase.approval_state
-    u'rejected'
+    'rejected'
 
 Quote purchase and check a new pending request is created::
 
@@ -174,9 +172,9 @@ Quote purchase and check a new pending request is created::
     >>> len(purchase.approval_requests)
     3
     >>> sorted(r.state for r in purchase.approval_requests)
-    [u'cancelled', u'pending', u'rejected']
+    ['cancelled', 'pending', 'rejected']
     >>> purchase.approval_state
-    u'rejected'
+    'pending'
 
 Approve the pending request::
 
@@ -185,7 +183,7 @@ Approve the pending request::
     >>> pending_request.click('approve')
     >>> purchase.reload()
     >>> purchase.approval_state
-    u'approved'
+    'approved'
 
 Move to draft the purchase and check approved request is cancelled::
 
@@ -193,9 +191,9 @@ Move to draft the purchase and check approved request is cancelled::
     >>> len(purchase.approval_requests)
     3
     >>> sorted(r.state for r in purchase.approval_requests)
-    [u'cancelled', u'cancelled', u'rejected']
+    ['cancelled', 'cancelled', 'rejected']
     >>> purchase.approval_state
-    u'rejected'
+    'none'
 
 Quote purchase and check a new pending request is created::
 
@@ -203,9 +201,9 @@ Quote purchase and check a new pending request is created::
     >>> len(purchase.approval_requests)
     4
     >>> sorted(r.state for r in purchase.approval_requests)
-    [u'cancelled', u'cancelled', u'pending', u'rejected']
+    ['cancelled', 'cancelled', 'pending', 'rejected']
     >>> purchase.approval_state
-    u'rejected'
+    'pending'
 
 Approve the pending request::
 
@@ -214,10 +212,10 @@ Approve the pending request::
     >>> pending_request.click('approve')
     >>> purchase.reload()
     >>> purchase.approval_state
-    u'approved'
+    'approved'
 
 Check purchase can be confirmed::
 
     >>> purchase.click('confirm')
     >>> purchase.state
-    u'confirmed'
+    'done'
