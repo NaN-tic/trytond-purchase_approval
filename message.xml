@@ -4,21 +4,16 @@ this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data grouped="1">
         <record model="ir.message" id="approve_no_quotation">
-            <field name="text">You cannot approve the request "%(request)s" because the
-                related purchase "%(purchase)s" is not a Quotation.</field>
+            <field name="text">You cannot approve the request "%(request)s" because the related purchase "%(purchase)s" is not a Quotation.</field>
         </record>
         <record model="ir.message" id="reject_no_quotation">
-            <field name="text">You cannot reject the request "%(request)s" because the
-                related purchase "%(purchase)s" is not a Quotation.</field>
+            <field name="text">You cannot reject the request "%(request)s" because the related purchase "%(purchase)s" is not a Quotation.</field>
         </record>
         <record model="ir.message" id="cancel_no_quotation_draft_purchase">
-            <field name="text">You cannot cancel the request "%(request)s" because the
-                related purchase "%(purchase)s" is not a Quotation or a
-                Draft purchase.</field>
+            <field name="text">You cannot cancel the request "%(request)s" because the related purchase "%(purchase)s" is not a Quotation or a Draft purchase.</field>
         </record>
         <record model="ir.message" id="missing_approval">
-            <field name="text">The purchase "%(purchase)s" cannot be confirmed because it
-                doesn\'t have any accepted Approval Request.</field>
+            <field name="text">The purchase "%(purchase)s" cannot be confirmed because it doesn't have any accepted Approval Request.</field>
         </record>
     </data>
 </tryton>
