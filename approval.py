@@ -65,8 +65,7 @@ class ApprovalRequest(metaclass=PoolMeta):
         for request in requests:
             if (isinstance(request.document, Purchase)
                     and request.document.state != 'quotation'):
-                raise
-            UserError(gettext('purchase_approval.reject_no_quotation',
+                raise UserError(gettext('purchase_approval.reject_no_quotation',
                     request=request.rec_name,
                     purchase=request.document.rec_name))
         super(ApprovalRequest, cls).reject(requests)
