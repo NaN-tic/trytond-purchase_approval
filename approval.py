@@ -79,7 +79,7 @@ class ApprovalRequest(metaclass=PoolMeta):
         Purchase = pool.get('purchase.purchase')
         for request in requests:
             if (isinstance(request.document, Purchase)
-                    and request.document.state not in ('draft', 'quote')):
+                    and request.document.state not in ('draft', 'quotation')):
                 raise UserError(gettext(
                         'purchase_approval.cancel_no_quotation_draft_purchase',
                         request=request.rec_name,
