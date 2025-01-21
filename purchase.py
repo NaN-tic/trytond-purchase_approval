@@ -123,6 +123,15 @@ class Purchase(metaclass=PoolMeta):
         super(Purchase, cls).confirm(purchases)
 
     @classmethod
+    @ModelView.button
+    @Workflow.transition('cancelled')
+    def cancel(cls, purchases):
+        pool = Pool()
+        Request = pool.get('approval.request')
+        Request.cancel([r for p in purchases for r in p.approval_requests])
+        super(Purchase, cls).cancel(purchases)
+
+    @classmethod
     def copy(cls, purchases, default=None):
         if default is None:
             default = {}
