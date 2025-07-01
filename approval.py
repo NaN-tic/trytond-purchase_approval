@@ -31,11 +31,11 @@ class ApprovalRequest(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(ApprovalRequest, cls).__setup__()
+        super().__setup__()
 
     @classmethod
     def _get_document(cls):
-        return super(ApprovalRequest, cls)._get_document() + [
+        return super()._get_document() + [
             'purchase.purchase',
             ]
 
@@ -53,7 +53,7 @@ class ApprovalRequest(metaclass=PoolMeta):
                         'purchase_approval.approve_no_quotation',
                         request=request.rec_name,
                         purchase=request.document.rec_name))
-        super(ApprovalRequest, cls).approve(requests)
+        super().approve(requests)
 
     @classmethod
     @ModelView.button
@@ -68,7 +68,7 @@ class ApprovalRequest(metaclass=PoolMeta):
                 raise UserError(gettext('purchase_approval.reject_no_quotation',
                     request=request.rec_name,
                     purchase=request.document.rec_name))
-        super(ApprovalRequest, cls).reject(requests)
+        super().reject(requests)
 
     @classmethod
     @ModelView.button
@@ -84,7 +84,7 @@ class ApprovalRequest(metaclass=PoolMeta):
                         'purchase_approval.cancel_no_quotation_draft_purchase',
                         request=request.rec_name,
                         purchase=request.document.rec_name))
-        super(ApprovalRequest, cls).cancel(requests)
+        super().cancel(requests)
 
     @classmethod
     def create(cls, vlist):
@@ -98,7 +98,7 @@ class ApprovalRequest(metaclass=PoolMeta):
             elif (isinstance(document, str)
                     and document.startswith('purchase.purchase,')):
                 purchases.append(Purchase(int(document[18:])))
-        res = super(ApprovalRequest, cls).create(vlist)
+        res = super().create(vlist)
         if purchases:
             Purchase.set_approval_state(purchases)
         return res
@@ -119,11 +119,11 @@ class ApprovalRequest(metaclass=PoolMeta):
                 elif (isinstance(document, str)
                         and document.startswith('purchase.purchase,')):
                     purchases.append(Purchase(int(document[18:])))
-        super(ApprovalRequest, cls).write(*args)
+        super().write(*args)
         if purchases:
             Purchase.set_approval_state(purchases)
 
     @classmethod
     @set_purchase_approval_state
     def delete(cls, requests):
-        super(ApprovalRequest, cls).delete(requests)
+        super().delete(requests)
