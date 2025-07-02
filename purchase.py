@@ -78,7 +78,7 @@ class Purchase(metaclass=PoolMeta):
     def draft(cls, purchases):
         pool = Pool()
         Request = pool.get('approval.request')
-        super(Purchase, cls).draft(purchases)
+        super().draft(purchases)
         if purchases:
             requests = Request.search([
                     ('document.id', 'in', [p.id for p in purchases],
@@ -94,14 +94,14 @@ class Purchase(metaclass=PoolMeta):
     def quote(cls, purchases):
         pool = Pool()
         Request = pool.get('approval.request')
-        super(Purchase, cls).quote(purchases)
+        super().quote(purchases)
         to_create = []
         for purchase in purchases:
             if not purchase.approval_group:
                 continue  # it will failg the states
             request = purchase._get_approval_request()
             if request:
-                to_create.append(request._save_values)
+                to_create.append(request._save_values())
         if to_create:
             Request.create(to_create)
 
@@ -120,7 +120,7 @@ class Purchase(metaclass=PoolMeta):
         for purchase in purchases:
             if purchase.approval_state != 'approved':
                 raise UserError(gettext('purchase_approval.missing_approval', purchase=purchase.rec_name))
-        super(Purchase, cls).confirm(purchases)
+        super().confirm(purchases)
 
     @classmethod
     @ModelView.button
@@ -129,7 +129,7 @@ class Purchase(metaclass=PoolMeta):
         pool = Pool()
         Request = pool.get('approval.request')
         Request.cancel([r for p in purchases for r in p.approval_requests])
-        super(Purchase, cls).cancel(purchases)
+        super().cancel(purchases)
 
     @classmethod
     def copy(cls, purchases, default=None):
@@ -139,4 +139,4 @@ class Purchase(metaclass=PoolMeta):
             default = default.copy()
         default['approval_requests'] = None
         default['approval_state'] = 'none'
-        return super(Purchase, cls).copy(purchases, default=default)
+        return super().copy(purchases, default=default)
