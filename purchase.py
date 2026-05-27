@@ -17,7 +17,7 @@ class Purchase(metaclass=PoolMeta):
         domain=[
             ['OR',
                 ('model', '=', None),
-                ('model.model', '=', 'purchase.purchase')],
+                ('model.name', '=', 'purchase.purchase')],
             ],
         states={
             'required': ~Eval('state').in_(['draft', 'cancel']),
